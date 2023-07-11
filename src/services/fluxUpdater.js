@@ -54,6 +54,8 @@ async function checkFluxUpdate() {
           .addFields({ name: `Version`, value: `${currentVersion}` });
 
         await discordSendEmbed(embed);
+
+        return console.log(`Flux OS Updated: ${currentVersion}`);
       } else {
         // prettier-ignore
         const embed = new EmbedBuilder()
@@ -62,6 +64,8 @@ async function checkFluxUpdate() {
         .addFields({ name: `Status`, value: `FluxOS Update failed - please check manually` });
 
         await discordSendEmbed(embed);
+
+        return console.log("Flux OS Update failed");
       }
     }
 
