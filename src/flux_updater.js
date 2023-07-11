@@ -2,7 +2,7 @@ import { checkFluxUpdate } from "./services/fluxUpdater.js";
 import { checkUpdateDaemon } from "./services/daemonUpdater.js";
 import { checkUpdateBenchmark } from "./services/benchmarkUpdater.js";
 
-console.log("watchdog-v2 starting ...");
+console.log("flux node updater starting ...");
 
 async function updateJob() {
   await checkUpdateBenchmark();
