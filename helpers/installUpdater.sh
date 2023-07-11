@@ -27,7 +27,7 @@ if [[ $(pm2 info flux_updater 2>&1 | grep status) != "" ]]; then
     pm2 reload flux_updater --watch
 else
     echo -e "flux_updater not already running ... starting flux_updater service"
-    pm2 start src/app.js --watch
+    pm2 start src/flux_updater.js --watch
     sleep 2
     pm2 save
 fi

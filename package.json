@@ -2,10 +2,10 @@
   "name": "flux_updater",
   "version": "1.0.0",
   "description": "Flux node auto update service",
-  "main": "app.js",
+  "main": "flux_updater.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "node src/flux_updater.js",
+    "dev": "nodemon src/flux_updater.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
