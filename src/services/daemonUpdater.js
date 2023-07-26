@@ -41,7 +41,7 @@ async function checkUpdateDaemon() {
         const embed = new EmbedBuilder()
           .setTitle(`Flux Daemon Updated`)
           .setColor(0xff0000)
-          .addFields({ name: `Host`, value: `${checkHostName()}` })
+          .addFields({ name: `Host`, value: `${await checkHostName()}` })
           .addFields({ name: `Version`, value: `${localVersion}` });
 
         await discordSendEmbed(embed);

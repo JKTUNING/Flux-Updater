@@ -40,7 +40,7 @@ async function checkUpdateBenchmark() {
       const embed = new EmbedBuilder()
         .setTitle(`Flux Bench Updated`)
         .setColor(0xff0000)
-        .addFields({ name: `Host`, value: `${checkHostName()}` })
+        .addFields({ name: `Host`, value: `${await checkHostName()}` })
         .addFields({ name: `Version`, value: `${localVersion}` });
 
       await discordSendEmbed(embed);
