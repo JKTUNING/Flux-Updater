@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { checkApt } from "../Utils/utils.js";
+import { checkApt, checkHostName } from "../Utils/utils.js";
 import sleep from "sleep-promise";
 
 /**
@@ -40,6 +40,7 @@ async function checkUpdateBenchmark() {
       const embed = new EmbedBuilder()
         .setTitle(`Flux Bench Updated`)
         .setColor(0xff0000)
+        .addFields({ name: `Host`, value: `${checkHostName()}` })
         .addFields({ name: `Version`, value: `${localVersion}` });
 
       await discordSendEmbed(embed);

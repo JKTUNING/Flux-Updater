@@ -3,7 +3,7 @@ import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
 import sleep from "sleep-promise";
-import { checkApt } from "../Utils/utils.js";
+import { checkApt, checkHostName } from "../Utils/utils.js";
 
 /**
  * Check to see if daemon requires update
@@ -41,6 +41,7 @@ async function checkUpdateDaemon() {
         const embed = new EmbedBuilder()
           .setTitle(`Flux Daemon Updated`)
           .setColor(0xff0000)
+          .addFields({ name: `Host`, value: `${checkHostName()}` })
           .addFields({ name: `Version`, value: `${localVersion}` });
 
         await discordSendEmbed(embed);
