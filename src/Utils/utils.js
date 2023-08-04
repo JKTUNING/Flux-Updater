@@ -32,4 +32,13 @@ async function getNodeCollateral() {
   }
 }
 
-export { checkApt, getNodeCollateral };
+async function checkHostName() {
+  try {
+    const Hostname = shell.exec(`hostname`, { silent: true }).stdout.trim();
+    return Hostname;
+  } catch (error) {
+    console.log(error);
+    return "Flux Node";
+  }
+}
+export { checkApt, getNodeCollateral, checkHostName };

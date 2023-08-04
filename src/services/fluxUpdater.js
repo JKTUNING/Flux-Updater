@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { getNodeCollateral } from "../Utils/utils.js";
+import { checkHostName, getNodeCollateral } from "../Utils/utils.js";
 
 /**
  * Checks to see if Flux node requires an update
@@ -51,6 +51,7 @@ async function checkFluxUpdate() {
         const embed = new EmbedBuilder()
           .setTitle(`Flux OS Updated`)
           .setColor(0xff0000)
+          .addFields({ name: `Host`, value: `${await checkHostName()}` })
           .addFields({ name: `Version`, value: `${currentVersion}` });
 
         await discordSendEmbed(embed);
@@ -61,11 +62,13 @@ async function checkFluxUpdate() {
         const embed = new EmbedBuilder()
         .setTitle(`Flux OS Update Failed`)
         .setColor(0xff0000)
-        .addFields({ name: `Status`, value: `FluxOS Update failed - please check manually` });
+        .addFields({ name: `Host`, value: `${await checkHostName()}`})
+        .addFields({ name: `Status`, value: `FluxOS Update failed` })
+        .addFields({ name: `Error`, value: `${updateResult.msg ?? "N/A"}` });
 
         await discordSendEmbed(embed);
 
-        return console.log("Flux OS Update failed");
+        return console.log(`${updateResult.msg ?? "Flux OS Update failed"}`);
       }
     }
 
