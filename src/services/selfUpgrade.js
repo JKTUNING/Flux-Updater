@@ -19,8 +19,6 @@ async function checkSelfUpdate() {
 
     localVersion = JSON.parse(localVersion.msg)?.version ?? 0;
 
-    console.log(`Local Version - ${localVersion}`);
-    console.log(`Current Version - ${currentVersion}`);
     // check if needs updated, if not then return
     if (localVersion >= currentVersion) {
       return;

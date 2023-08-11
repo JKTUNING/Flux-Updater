@@ -1,6 +1,6 @@
 {
   "name": "flux_updater",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Flux node auto update service",
   "main": "flux_updater.js",
   "scripts": {

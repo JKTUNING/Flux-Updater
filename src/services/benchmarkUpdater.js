@@ -119,7 +119,7 @@ async function processBenchUpdate() {
   const updateFluxbench = shell.exec("sudo apt-get install fluxbench -y", { silent: true });
 
   if (updateFluxbench.code || updateFluxbench.stderr) {
-    return { error: true, msg: updateFluxbench.stderr.trim() };
+    return { error: true, msg: `Code: ${updateFluxbench.code ?? "empty"}  MSG: ${updateFluxbench.stderr.trim() ?? "empty"}` };
   }
 
   await sleep(2);
