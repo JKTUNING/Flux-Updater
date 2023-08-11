@@ -84,7 +84,7 @@ async function checkLocalVersion() {
 async function processUpdate() {
   try {
     // proceed with updating by pulling from github repo
-    const update = shell.exec("cd && cd Flux-Updater && git fetch && git pull -p", { silent: true });
+    const update = shell.exec("cd && cd Flux-Updater && git checkout main && git fetch && git pull -p", { silent: true });
     // check to make sure command did not return an error
     if (update.code != 0) {
       return { error: true, msg: `${update.stderr}` };
