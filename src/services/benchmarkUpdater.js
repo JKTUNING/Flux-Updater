@@ -119,6 +119,7 @@ async function processBenchUpdate() {
   const updateFluxbench = shell.exec("sudo apt-get install fluxbench -y", { silent: true });
 
   if (updateFluxbench.code || updateFluxbench.stderr) {
+    shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of update error
     return { error: true, msg: `Code: ${updateFluxbench.code ?? "empty"}  MSG: ${updateFluxbench.stderr.trim() ?? "empty"}` };
   }
 

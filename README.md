@@ -2,7 +2,7 @@
 
 This application will automatically update your Flux Nodes when a new version is released. It does a few checks before allowing the update to proceed.
 
-- Node rank percentage is > 30% 
+- Node rank percentage is > 20% 
 - Node rank percentage % 3 = 0 (so not all nodes update at once)
 
 It also gracefully shuts down FluxOS before pulling the changes from GitHub, avoiding multiple FluxOS restarts on version update.
