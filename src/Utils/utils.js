@@ -4,7 +4,7 @@ import { homedir } from "os";
 
 async function checkApt() {
   // kill any ongoing software updates
-  const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true });
+  const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true }).stdout;
   if (update_info == "installing software") {
     shell.exec("sudo killall apt", { silent: true });
     shell.exec("sudo killall apt-get", { silent: true });

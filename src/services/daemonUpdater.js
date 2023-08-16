@@ -124,6 +124,7 @@ async function processDaemonUpdate() {
   const updateFlux = shell.exec("sudo apt-get install flux -y", { silent: true });
 
   if (updateFlux.code || updateFlux.stderr) {
+    shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of error
     return { error: true, msg: updateFlux.stderr.trim() };
   }
 

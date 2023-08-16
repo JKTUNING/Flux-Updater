@@ -166,7 +166,7 @@ async function checkValidUpdate(rank, total) {
     const rankPercentile = ((rank / total) * 100).toFixed(0);
 
     // check to sure rank isn't close to next reward
-    if (rankPercentile > 30 && rankPercentile % 3 === 0) {
+    if (rankPercentile > 20 && rankPercentile % 3 === 0) {
       return true;
     }
 
@@ -197,6 +197,7 @@ async function updateFlux() {
 
     // check to make sure command did not return an error
     if (update.code != 0) {
+      shell.exec("pm2 start flux", { silent: true }); // start flux just incase it didn't update
       return { error: true, msg: `${update.stderr}` };
     } else {
       // restart flux after successful update
