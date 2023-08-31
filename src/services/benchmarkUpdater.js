@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { checkApt, checkHostName } from "../Utils/utils.js";
+import { checkApt, checkHostName, compareVersion } from "../Utils/utils.js";
 import sleep from "sleep-promise";
 
 /**
@@ -19,12 +19,10 @@ async function checkUpdateBenchmark() {
     if (localVersion.error) return console.log(`Error checking local fluxbench version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
 
-    console.log(`Remote Bench version: ${remoteVersion} -- Local Bench version: ${localVersion}`);
-
-    if (remoteVersion.localeCompare(localVersion)) {
+    if (compareVersion(remoteVersion,localVersion)) {
       console.log(`### Bench requires update ###`);
-      //console.log(`Remote Bench version: ${remoteVersion}`);
-      //console.log(`Local Bench version: ${localVersion}`);
+      console.log(`Remote Bench version: ${remoteVersion}`);
+      console.log(`Local Bench version: ${localVersion}`);
       console.log(`##############################`);
 
       let processedUpdate = await processBenchUpdate();

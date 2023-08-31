@@ -46,4 +46,35 @@ async function checkHostName() {
   }
 }
 
-export { checkApt, getNodeCollateral, checkHostName };
+/**
+ * @description Compares package versions to determine if we should update
+ * @param {string} remoteVersion
+ * @param {string} localVersion
+ * @returns {boolean}
+ */
+function compareVersion(remoteVersion, localVersion) {
+  try {
+    const remoteVersionSplit = remoteVersion.split(".");
+    const remoteVersionMajor = parseInt(remoteVersionSplit[0]);
+    const remoteVersionMinor = parseInt(remoteVersionSplit[1]);
+    const remoteVersionPatch = parseInt(remoteVersionSplit[2]);
+
+    const localVersionSplit = localVersion.split(".");
+    const localVersionMajor = parseInt(localVersionSplit[0]);
+    const localVersionMinor = parseInt(localVersionSplit[1]);
+    const localVersionPatch = parseInt(localVersionSplit[2]);
+
+    if (remoteVersionMajor > localVersionMajor) return true;
+    if (remoteVersionMajor < localVersionMajor) return false;
+
+    if (remoteVersionMinor > localVersionMinor) return true;
+    if (remoteVersionMinor < localVersionMinor) return false;
+
+    return remoteVersionPatch > localVersionPatch;
+  } catch (error) {
+    console.log("Error comparing versions");
+    return false;
+  }
+}
+
+export { checkApt, getNodeCollateral, checkHostName, compareVersion };

@@ -3,7 +3,7 @@ import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
 import sleep from "sleep-promise";
-import { checkApt, checkHostName } from "../Utils/utils.js";
+import { checkApt, checkHostName, compareVersion } from "../Utils/utils.js";
 
 /**
  * Check to see if daemon requires update
@@ -18,10 +18,8 @@ async function checkUpdateDaemon() {
     let localVersion = await checkLocalDaemonVersion();
     if (localVersion.error) return console.log(`Error checking local daemon version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
-
-    console.log(`Remote daemon version: ${remoteVersion} -- Local daemon version: ${localVersion}`);
     
-    if (remoteVersion.localeCompare(localVersion)) {
+    if (compareVersion(remoteVersion,localVersion)) {
       console.log(`### Daemon requires update ###`);
       //console.log(`Remote daemon version: ${remoteVersion}`);
       //console.log(`Local daemon version: ${localVersion}`);

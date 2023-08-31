@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { checkHostName, getNodeCollateral } from "../Utils/utils.js";
+import { checkHostName, compareVersion, getNodeCollateral } from "../Utils/utils.js";
 
 /**
  * Checks to see if Flux node requires an update
@@ -10,23 +10,23 @@ import { checkHostName, getNodeCollateral } from "../Utils/utils.js";
  */
 async function checkFluxUpdate() {
   try {
-    const currentVersion = await checkCurrentVersion();
-    let nodeVersion = await checkNodeFluxVersion();
+    const remoteFluxVersion = await checkRemoteFluxVersion();
+    let localFluxVersion = await checkLocalFluxVersion();
 
-    if (nodeVersion.error) {
+    if (localFluxVersion.error) {
       return console.log("Error checking flux version");
     }
 
-    nodeVersion = JSON.parse(nodeVersion.msg)?.version ?? 0;
-
-    console.log(`Local Flux OS version ${nodeVersion} ... Remote Flux Version ${currentVersion}`);
+    localFluxVersion = JSON.parse(localFluxVersion.msg)?.version ?? 0;
 
     // check if node needs updated, if not then return
-    if (nodeVersion >= currentVersion) {
+    if (!compareVersion(remoteFluxVersion, localFluxVersion)) {
       return;
     }
-    
+
     console.log(`### Flux OS requires an update ###`);
+    console.log(`Remote Flux version: ${remoteFluxVersion}`);
+    console.log(`Local Flux version: ${localFluxVersion}`);
     console.log(`##################################`);
     console.log("Checking Flux node rank");
 
@@ -54,11 +54,11 @@ async function checkFluxUpdate() {
           .setTitle(`Flux OS Updated`)
           .setColor(0xff0000)
           .addFields({ name: `Host`, value: `${await checkHostName()}` })
-          .addFields({ name: `Version`, value: `${currentVersion}` });
+          .addFields({ name: `Version`, value: `${remoteFluxVersion}` });
 
         await discordSendEmbed(embed);
 
-        return console.log(`Flux OS Updated: ${currentVersion}`);
+        return console.log(`Flux OS Updated: ${remoteFluxVersion}`);
       } else {
         // prettier-ignore
         const embed = new EmbedBuilder()
@@ -83,9 +83,9 @@ async function checkFluxUpdate() {
 /**
  * Returns the current production version of FluxOS
  * @returns {Promise<string>} Promise resolves to FluxOS version
- * @example const currentVersion = await checkCurrentVersion();
+ * @example const remoteFluxVersion = await checkRemoteFluxVersion();
  */
-async function checkCurrentVersion() {
+async function checkRemoteFluxVersion() {
   try {
     const getFluxData = await axios.get("https://raw.githubusercontent.com/RunOnFlux/flux/master/package.json", { timeout: 3000 });
     if (getFluxData?.data?.version) {
@@ -102,10 +102,10 @@ async function checkCurrentVersion() {
 /**
  * Checks current node version
  * @returns {Promise<object>} Promise Object
- * @example const nodeVersion = await checkNodeFluxVersion();
+ * @example const localFluxVersion = await checkLocalFluxVersion();
  * { error: false, msg: 4.2.1}
  */
-async function checkNodeFluxVersion() {
+async function checkLocalFluxVersion() {
   try {
     const version = shell.exec("cd && cat zelflux/package.json", { silent: true });
     if (version.code != 0) {
