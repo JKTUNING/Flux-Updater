@@ -1,3 +1,6 @@
+[![NodeJS Lint](https://github.com/JKTUNING/Flux-Updater/actions/workflows/main.yml/badge.svg)](https://github.com/JKTUNING/Flux-Updater/actions/workflows/main.yml)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FJKTUNING%2FFlux-Updater%2Fmain%2Fpackage.json&query=%24.version&label=Version)
+
 # Flux-Updater
 
 This application will automatically update your Flux Nodes when a new version is released. It does a few checks before allowing the update to proceed.
