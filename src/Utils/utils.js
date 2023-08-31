@@ -3,12 +3,16 @@ import fs from "fs/promises";
 import { homedir } from "os";
 
 async function checkApt() {
-  // kill any ongoing software updates
-  const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true }).stdout;
-  if (update_info == "installing software") {
-    shell.exec("sudo killall apt", { silent: true });
-    shell.exec("sudo killall apt-get", { silent: true });
-    shell.exec("sudo dpkg --configure -a", { silent: true });
+  try {
+    // kill any ongoing software updates
+    const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true }).stdout;
+    if (update_info == "installing software") {
+      shell.exec("sudo killall apt", { silent: true });
+      shell.exec("sudo killall apt-get", { silent: true });
+      shell.exec("sudo dpkg --configure -a", { silent: true });
+    }
+  } catch (error) {
+    console.log("error checking running apt updates");
   }
 }
 
@@ -41,4 +45,5 @@ async function checkHostName() {
     return "Flux Node";
   }
 }
+
 export { checkApt, getNodeCollateral, checkHostName };

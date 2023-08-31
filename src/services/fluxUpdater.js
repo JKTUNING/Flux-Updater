@@ -84,10 +84,15 @@ async function checkFluxUpdate() {
  * @example const currentVersion = await checkCurrentVersion();
  */
 async function checkCurrentVersion() {
-  const getFluxData = await axios.get("https://raw.githubusercontent.com/RunOnFlux/flux/master/package.json", { timeout: 3000 });
-  if (getFluxData?.data?.version) {
-    return getFluxData.data.version;
-  } else {
+  try {
+    const getFluxData = await axios.get("https://raw.githubusercontent.com/RunOnFlux/flux/master/package.json", { timeout: 3000 });
+    if (getFluxData?.data?.version) {
+      return getFluxData.data.version;
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.log("error checking remove flux version");
     return 0;
   }
 }
@@ -99,11 +104,16 @@ async function checkCurrentVersion() {
  * { error: false, msg: 4.2.1}
  */
 async function checkNodeFluxVersion() {
-  const version = shell.exec("cd && cat zelflux/package.json", { silent: true });
-  if (version.code != 0) {
-    return { error: true, msg: "exit code not 0" };
-  } else {
-    return { error: false, msg: version.stdout };
+  try {
+    const version = shell.exec("cd && cat zelflux/package.json", { silent: true });
+    if (version.code != 0) {
+      return { error: true, msg: "exit code not 0" };
+    } else {
+      return { error: false, msg: version.stdout };
+    }
+  } catch (error) {
+    console.log("error checking local flux version");
+    return { error: true, msg: "error checking local flux version" };
   }
 }
 
