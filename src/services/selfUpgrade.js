@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { checkHostName } from "../Utils/utils.js";
+import { checkHostName, compareVersion } from "../Utils/utils.js";
 
 /**
  * Checks to see if Flux Updater requires an update
@@ -20,7 +20,7 @@ async function checkSelfUpdate() {
     localVersion = JSON.parse(localVersion.msg)?.version ?? 0;
 
     // check if needs updated, if not then return
-    if (localVersion >= currentVersion) {
+    if (!compareVersion(currentVersion,localVersion)) {
       return;
     }
 
@@ -58,10 +58,15 @@ async function checkSelfUpdate() {
 }
 
 async function checkCurrentVersion() {
-  const getVersion = await axios.get("https://raw.githubusercontent.com/JKTUNING/Flux-Updater/main/package.json", { timeout: 3000 });
-  if (getVersion?.data?.version) {
-    return getVersion.data.version;
-  } else {
+  try {
+    const getVersion = await axios.get("https://raw.githubusercontent.com/JKTUNING/Flux-Updater/main/package.json", { timeout: 3000 });
+    if (getVersion?.data?.version) {
+      return getVersion.data.version;
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.log(`error checking current self-version`);
     return 0;
   }
 }
@@ -73,11 +78,16 @@ async function checkCurrentVersion() {
  * { error: false, msg: 1.0.1}
  */
 async function checkLocalVersion() {
-  const version = shell.exec("cd && cat Flux-Updater/package.json", { silent: true });
-  if (version.code != 0) {
-    return { error: true, msg: "exit code not 0" };
-  } else {
-    return { error: false, msg: version.stdout };
+  try {
+    const version = shell.exec("cd && cat Flux-Updater/package.json", { silent: true });
+    if (version.code != 0) {
+      return { error: true, msg: "exit code not 0" };
+    } else {
+      return { error: false, msg: version.stdout };
+    }
+  } catch (error) {
+    console.log(`error checking local self-version`);
+    return { error: true, msg: "error checking version" };
   }
 }
 

@@ -3,12 +3,16 @@ import fs from "fs/promises";
 import { homedir } from "os";
 
 async function checkApt() {
-  // kill any ongoing software updates
-  const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true }).stdout;
-  if (update_info == "installing software") {
-    shell.exec("sudo killall apt", { silent: true });
-    shell.exec("sudo killall apt-get", { silent: true });
-    shell.exec("sudo dpkg --configure -a", { silent: true });
+  try {
+    // kill any ongoing software updates
+    const update_info = shell.exec("ps -C apt,apt-get,dpkg >/dev/null && echo 'installing software' || echo 'all clear'", { silent: true }).stdout;
+    if (update_info == "installing software") {
+      shell.exec("sudo killall apt", { silent: true });
+      shell.exec("sudo killall apt-get", { silent: true });
+      shell.exec("sudo dpkg --configure -a", { silent: true });
+    }
+  } catch (error) {
+    console.log("error checking running apt updates");
   }
 }
 
@@ -41,4 +45,36 @@ async function checkHostName() {
     return "Flux Node";
   }
 }
-export { checkApt, getNodeCollateral, checkHostName };
+
+/**
+ * @description Compares package versions to determine if we should update
+ * @param {string} remoteVersion
+ * @param {string} localVersion
+ * @returns {boolean}
+ */
+function compareVersion(remoteVersion, localVersion) {
+  try {
+    const remoteVersionSplit = remoteVersion.split(".");
+    const remoteVersionMajor = parseInt(remoteVersionSplit[0]);
+    const remoteVersionMinor = parseInt(remoteVersionSplit[1]);
+    const remoteVersionPatch = parseInt(remoteVersionSplit[2]);
+
+    const localVersionSplit = localVersion.split(".");
+    const localVersionMajor = parseInt(localVersionSplit[0]);
+    const localVersionMinor = parseInt(localVersionSplit[1]);
+    const localVersionPatch = parseInt(localVersionSplit[2]);
+
+    if (remoteVersionMajor > localVersionMajor) return true;
+    if (remoteVersionMajor < localVersionMajor) return false;
+
+    if (remoteVersionMinor > localVersionMinor) return true;
+    if (remoteVersionMinor < localVersionMinor) return false;
+
+    return remoteVersionPatch > localVersionPatch;
+  } catch (error) {
+    console.log("Error comparing versions");
+    return false;
+  }
+}
+
+export { checkApt, getNodeCollateral, checkHostName, compareVersion };

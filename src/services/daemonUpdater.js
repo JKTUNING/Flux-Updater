@@ -3,7 +3,7 @@ import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
 import sleep from "sleep-promise";
-import { checkApt, checkHostName } from "../Utils/utils.js";
+import { checkApt, checkHostName, compareVersion } from "../Utils/utils.js";
 
 /**
  * Check to see if daemon requires update
@@ -18,11 +18,11 @@ async function checkUpdateDaemon() {
     let localVersion = await checkLocalDaemonVersion();
     if (localVersion.error) return console.log(`Error checking local daemon version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
-
-    if (remoteVersion.localeCompare(localVersion)) {
+    
+    if (compareVersion(remoteVersion,localVersion)) {
       console.log(`### Daemon requires update ###`);
-      console.log(`Remote daemon version: ${remoteVersion}`);
-      console.log(`Local daemon version: ${localVersion}`);
+      //console.log(`Remote daemon version: ${remoteVersion}`);
+      //console.log(`Local daemon version: ${localVersion}`);
       console.log(`##############################`);
 
       let processedUpdate = await processDaemonUpdate();
@@ -111,31 +111,35 @@ async function checkLocalDaemonVersion() {
  * console.log(processUpdate.errror);
  */
 async function processDaemonUpdate() {
-  // check if updates are processing
-  await checkApt();
+  try {
+    // check if updates are processing
+    await checkApt();
 
-  // stop the fluxD process and any services tied to it
-  shell.exec("sudo systemctl stop zelcash", { silent: true });
-  shell.exec("sudo fuser -k 16125/tcp", { silent: true });
+    // stop the fluxD process and any services tied to it
+    shell.exec("sudo systemctl stop zelcash", { silent: true });
+    shell.exec("sudo fuser -k 16125/tcp", { silent: true });
 
-  // update apt cache
-  shell.exec("sudo apt-get update", { silent: true });
-  // update flux
-  const updateFlux = shell.exec("sudo apt-get install flux -y", { silent: true });
+    // update apt cache
+    shell.exec("sudo apt-get update", { silent: true });
+    // update flux
+    const updateFlux = shell.exec("sudo apt-get install flux -y", { silent: true });
 
-  if (updateFlux.code || updateFlux.stderr) {
-    shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of error
-    return { error: true, msg: updateFlux.stderr.trim() };
+    if (updateFlux.code || updateFlux.stderr) {
+      shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of error
+      return { error: true, msg: updateFlux.stderr.trim() };
+    }
+
+    await sleep(2);
+    const startDaemon = shell.exec("sudo systemctl start zelcash", { silent: true });
+    if (startDaemon.code || startDaemon.stderr) {
+      console.log("Daemon failed to start");
+      return { error: true, msg: startDaemon.stderr };
+    }
+
+    return { error: false, msg: "Flux daemon updated!" };
+  } catch (error) {
+    console.log(`error processing daemon update ${error.message ?? JSON.stringify(error)}`);
   }
-
-  await sleep(2);
-  const startDaemon = shell.exec("sudo systemctl start zelcash", { silent: true });
-  if (startDaemon.code || startDaemon.stderr) {
-    console.log("Daemon failed to start");
-    return { error: true, msg: startDaemon.stderr };
-  }
-
-  return { error: false, msg: "Flux daemon updated!" };
 }
 
 export { checkUpdateDaemon };
