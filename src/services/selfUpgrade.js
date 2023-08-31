@@ -2,7 +2,7 @@ import axios from "axios";
 import shell from "shelljs";
 import { EmbedBuilder } from "discord.js";
 import { discordSendEmbed } from "./discord.js";
-import { checkHostName } from "../Utils/utils.js";
+import { checkHostName, compareVersion } from "../Utils/utils.js";
 
 /**
  * Checks to see if Flux Updater requires an update
@@ -20,7 +20,7 @@ async function checkSelfUpdate() {
     localVersion = JSON.parse(localVersion.msg)?.version ?? 0;
 
     // check if needs updated, if not then return
-    if (localVersion >= currentVersion) {
+    if (!compareVersion(currentVersion,localVersion)) {
       return;
     }
 
