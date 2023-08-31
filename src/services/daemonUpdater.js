@@ -19,10 +19,12 @@ async function checkUpdateDaemon() {
     if (localVersion.error) return console.log(`Error checking local daemon version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
 
+    console.log(`Remote daemon version: ${remoteVersion} -- Local daemon version: ${localVersion}`);
+    
     if (remoteVersion.localeCompare(localVersion)) {
       console.log(`### Daemon requires update ###`);
-      console.log(`Remote daemon version: ${remoteVersion}`);
-      console.log(`Local daemon version: ${localVersion}`);
+      //console.log(`Remote daemon version: ${remoteVersion}`);
+      //console.log(`Local daemon version: ${localVersion}`);
       console.log(`##############################`);
 
       let processedUpdate = await processDaemonUpdate();

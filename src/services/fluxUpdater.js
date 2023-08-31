@@ -19,13 +19,15 @@ async function checkFluxUpdate() {
 
     nodeVersion = JSON.parse(nodeVersion.msg)?.version ?? 0;
 
+    console.log(`Local Flux OS version ${nodeVersion} ... Remote Flux Version ${currentVersion}`);
+
     // check if node needs updated, if not then return
     if (nodeVersion >= currentVersion) {
       return;
     }
-
-    console.log(`Installed Flux OS version ${nodeVersion} ... Current Version ${currentVersion}`);
-    console.log(`Flux OS requires an update`);
+    
+    console.log(`### Flux OS requires an update ###`);
+    console.log(`##################################`);
     console.log("Checking Flux node rank");
 
     // check node rank from daemon deterministic list
