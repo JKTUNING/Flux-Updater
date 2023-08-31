@@ -20,7 +20,7 @@ async function checkSelfUpdate() {
     localVersion = JSON.parse(localVersion.msg)?.version ?? 0;
 
     // check if needs updated, if not then return
-    if (!compareVersion(currentVersion,localVersion)) {
+    if (!compareVersion(currentVersion, localVersion)) {
       return;
     }
 

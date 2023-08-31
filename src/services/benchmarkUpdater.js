@@ -19,7 +19,7 @@ async function checkUpdateBenchmark() {
     if (localVersion.error) return console.log(`Error checking local fluxbench version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
 
-    if (compareVersion(remoteVersion,localVersion)) {
+    if (compareVersion(remoteVersion, localVersion)) {
       console.log(`### Bench requires update ###`);
       console.log(`Remote Bench version: ${remoteVersion}`);
       console.log(`Local Bench version: ${localVersion}`);

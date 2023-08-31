@@ -18,8 +18,8 @@ async function checkUpdateDaemon() {
     let localVersion = await checkLocalDaemonVersion();
     if (localVersion.error) return console.log(`Error checking local daemon version :: ${localVersion.msg}`);
     localVersion = localVersion.msg;
-    
-    if (compareVersion(remoteVersion,localVersion)) {
+
+    if (compareVersion(remoteVersion, localVersion)) {
       console.log(`### Daemon requires update ###`);
       //console.log(`Remote daemon version: ${remoteVersion}`);
       //console.log(`Local daemon version: ${localVersion}`);
