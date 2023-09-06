@@ -94,7 +94,7 @@ async function checkRemoteFluxVersion() {
       return 0;
     }
   } catch (error) {
-    console.log("error checking remove flux version");
+    console.log("error checking remote flux version");
     return 0;
   }
 }
