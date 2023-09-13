@@ -27,7 +27,7 @@ async function discordSendEmbed(embed) {
       if (discordClient) {
         discordClient.send({
           username: `FluxNode`,
-          avatarURL: `https://i.imgur.com/AfFp7pu.png`,
+          avatarURL: `https://raw.githubusercontent.com/JKTUNING/Flux-Updater/main/helpers/icon.jpg`,
           embeds: [embed],
         });
       }

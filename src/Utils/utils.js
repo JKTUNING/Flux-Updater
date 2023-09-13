@@ -72,7 +72,7 @@ function compareVersion(remoteVersion, localVersion) {
 
     return remoteVersionPatch > localVersionPatch;
   } catch (error) {
-    console.log("Error comparing versions");
+    console.log("error comparing versions");
     return false;
   }
 }
