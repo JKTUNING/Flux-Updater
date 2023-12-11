@@ -121,7 +121,7 @@ async function processBenchUpdate() {
     // update apt cache
     shell.exec("sudo apt-get update", { silent: true });
     // update fluxbench
-    const updateFluxbench = shell.exec("sudo apt-get install fluxbench -y", { silent: true });
+    const updateFluxbench = shell.exec("sudo apt-get install fluxbench -y 2> /dev/null", { silent: true });
 
     if (updateFluxbench.code || updateFluxbench.stderr) {
       shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of update error

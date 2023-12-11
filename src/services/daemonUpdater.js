@@ -122,7 +122,7 @@ async function processDaemonUpdate() {
     // update apt cache
     shell.exec("sudo apt-get update", { silent: true });
     // update flux
-    const updateFlux = shell.exec("sudo apt-get install flux -y", { silent: true });
+    const updateFlux = shell.exec("sudo apt-get install flux -y 2> /dev/null", { silent: true });
 
     if (updateFlux.code || updateFlux.stderr) {
       shell.exec("sudo systemctl start zelcash", { silent: true }); // start daemon incase of error

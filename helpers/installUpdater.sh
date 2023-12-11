@@ -24,10 +24,10 @@ fi
 #check to see if flux_updater is already running and stop/delete it from pm2
 if [[ $(pm2 info flux_updater 2>&1 | grep status) != "" ]]; then 
     echo -e "flux_updater already running ... stopping and deleting flux_updater from pm2"
-    pm2 reload flux_updater --watch
+    pm2 reload flux_updater --watch-delay 1000
 else
     echo -e "flux_updater not already running ... starting flux_updater service"
-    pm2 start src/flux_updater.js --watch
+    pm2 start src/flux_updater.js --watch-delay 1000
     sleep 2
     pm2 save
 fi
